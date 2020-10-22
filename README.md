@@ -14,3 +14,7 @@ Timestamps:
 2:25:44 Add Authentication by using Passport.js
 3:04:12 Add Sessions so people remain logged in
 3:16:10 Quick look at options for Rendering the Frontend
+
+
+
+Lindsay pickup at 1:57
