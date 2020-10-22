@@ -1,5 +1,6 @@
 const express = require('express')
 const routes = require('./routes')
+const passport = require('./auth')
 const app = express()
 const port = 3001
 
@@ -13,6 +14,9 @@ app.use('*', (req, res, next) => {
     next()
 })
 /** END DEMO MIDDLEWARE */
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', routes)
 
