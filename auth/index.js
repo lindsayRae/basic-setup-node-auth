@@ -16,31 +16,34 @@ passport.deserializeUser(async (id, done) => {
         const user = await db('users').where({id}).first()
         const {email} = user
         done(null, {id, email})
+    // proof that req.user comes from deserializeUser
+     //   done(null, {id, email, isThisFromServer: true})
     } catch (err){
         done(err, null)
     }
 })
 
-// for loging in
+// set up for logging in
 passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password'
-},
-async function(email, password, done){
-    const user = await db('users').where({email}).first()
+        usernameField: 'email',
+        passwordField: 'password'
+    },
+   // user from passport comes from below function 
+    async function(email, password, done){
+        const user = await db('users').where({email}).first()
 
-    if(!user) return done(null, false, {message: "Incorrect Email or Password"})
+        if(!user) return done(null, false, {message: "Incorrect Email or Password"})
 
-    const hash = crypto.pbkdf2Sync(password, user.salt, 1000, 64, 'sha512').toString('hex')
-    const passwordMatch = user.password === hash
+        const hash = crypto.pbkdf2Sync(password, user.salt, 1000, 64, 'sha512').toString('hex')
+        const passwordMatch = user.password === hash
 
-    if(!passwordMatch){
-        return done(null, false, {message: "Inncorrect Email or Password"})
+        if(!passwordMatch){
+            return done(null, false, {message: "Inncorrect Email or Password"})
+        }
+
+        return done(null, user)
+    //return done(null, {id: user.id, email})
     }
-
-    return done(null, user)
-   //return done(null, {id: user.id, email})
-}
 ))
 
 module.exports = passport
